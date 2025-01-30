@@ -1,10 +1,10 @@
-name: Deploy to GitHub Pages
+name: Build To Branch
 
 on:
   workflow_dispatch: # Trigger the workflow manually
   push:
     branches:
-      - main # Trigger the workflow when pushing to the main branch
+      - master # Trigger the workflow when pushing to the main branch
 
 jobs:
   build-and-deploy:
