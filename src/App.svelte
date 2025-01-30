@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { runEffects } from './canvasEffects';
     import { Convert } from './convert';
+  import { text } from 'body-parser';
 
     let canvas: HTMLCanvasElement;
     let filePicker: HTMLInputElement;
@@ -101,6 +102,12 @@
         a.click();
     }
 
+    // given the convertedImage return in KB the size of the string
+    function getStringSize()
+    {
+        return (new TextEncoder().encode(convertedImage).length / 1024).toFixed(2);
+    }
+
 </script>
 
 <main>
@@ -121,7 +128,7 @@
             <input type="file" accept="image/*" bind:this={filePicker} />
             <button onclick="{calculate}">Calculate</button>
             {#if convertedImage != ""}
-                <button onclick="{download}">Save</button>
+                <button onclick="{download}">Save {getStringSize()}kb</button>
             {:else}
                 <button disabled>Save</button>
             {/if}
