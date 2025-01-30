@@ -3,8 +3,7 @@
     import { onMount } from 'svelte';
     import { runEffects } from './canvasEffects';
     import { Convert } from './convert';
-  import { text } from 'body-parser';
-
+    
     let canvas: HTMLCanvasElement;
     let filePicker: HTMLInputElement;
     let ctx: CanvasRenderingContext2D
@@ -24,14 +23,9 @@
         canvas.height = calculatorScreenSize.height;
 
         ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-        
-        if (filePicker == null) {
-            console.error('filePicker is null!');
-            return;
-        }
 
-        if (canvas == null) {
-            console.error('canvas is null!');
+        if (canvas == null || filePicker == null) {
+            console.error('canvas or filePicker is null!');
             return;
         }
 
@@ -46,7 +40,8 @@
                     let offscreenCtx = originalImage.getContext('2d') as OffscreenCanvasRenderingContext2D;
                     offscreenCtx.clearRect(0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
                     offscreenCtx.drawImage(img, 0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
-                    
+                    update2ndCanvas();
+
                     // copy the image to the visible canvas
                     ctx.clearRect(0, 0, calculatorScreenSize.width, calculatorScreenSize.height);                
                     runEffects(originalImage, ctx, 0,0);
@@ -71,19 +66,19 @@
             convertedImage = ""
         })
 
-        setInterval(() => {
-            let canvas2 = document.getElementById('AlwaysCanvas') as HTMLCanvasElement;
-            canvas2.width = calculatorScreenSize.width;
-            canvas2.height = calculatorScreenSize.height;
-            let ctx2 = canvas2.getContext('2d') as CanvasRenderingContext2D;
-            
-            // draw the original image
-            ctx2.clearRect(0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
-            ctx2.drawImage(originalImage, 0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
-        
-        }, 1000);
-
     })
+
+    function update2ndCanvas()
+    {
+        let canvas2 = document.getElementById('AlwaysCanvas') as HTMLCanvasElement;
+        canvas2.width = calculatorScreenSize.width;
+        canvas2.height = calculatorScreenSize.height;
+        let ctx2 = canvas2.getContext('2d') as CanvasRenderingContext2D;
+        
+        // draw the original image
+        ctx2.clearRect(0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
+        ctx2.drawImage(originalImage, 0, 0, calculatorScreenSize.width, calculatorScreenSize.height);
+    }
 
     function calculate() {
         let contrast = document.getElementById('contrast') as HTMLInputElement;
